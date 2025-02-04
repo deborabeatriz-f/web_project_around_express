@@ -35,4 +35,30 @@ function findUserById(req, res) {
     .catch((err) => res.status(500).send({ message: err.message }));
 }
 
-module.exports = { createUser, findUsers, findUserById };
+function updateUser(req, res) {
+  const userId = req.user._id;
+  const { name, about } = req.body;
+  return User.findByIdAndUpdate(userId, { name, about }, { new: true })
+    .orFail(() => {
+      const error = new Error("Nenhum usuário encontrado com esse id");
+      error.statusCode = 404;
+      throw error;
+    })
+    .then((updatedUser) => res.status(201).json(updatedUser))
+    .catch((err) => res.status(500).send({ message: err.message }));
+}
+
+function updateAvatar(req, res) {
+    const userId = req.user._id;
+    const { avatar } = req.body;
+    return User.findByIdAndUpdate(userId, { avatar }, { new: true })
+      .orFail(() => {
+        const error = new Error("Nenhum usuário encontrado com esse id");
+        error.statusCode = 404;
+        throw error;
+      })
+      .then((updatedAvatar) => res.status(201).json(updatedAvatar))
+      .catch((err) => res.status(500).send({ message: err.message }));
+}
+
+module.exports = { createUser, findUsers, findUserById, updateUser, updateAvatar };

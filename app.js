@@ -9,6 +9,15 @@ mongoose.connect("mongodb://localhost:27017/aroundb");
 
 app.use(express.json());
 
+// Implementação de uma Solução de Autorização Temporária
+app.use((req, res, next) => {
+  req.user = {
+    _id: "679e26df57feee8a89b63933",
+  };
+
+  next();
+});
+
 app.use("/users", usersRouter);
 app.use("/cards", cardsRouter);
 
